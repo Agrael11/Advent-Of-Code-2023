@@ -14,34 +14,46 @@
         {
             //Read input data
             string[] inputData = input.Replace("\r", "").TrimEnd('\n').Split('\n');
-
-            //Prepare variables - list of elves and amount of calories for current elf
-            List<int> elves = new();
-            int elfCalories = 0;
-
-            //For each line in input
-            for (int i = 0; i < inputData.Length; i++)
+            //Remember total CalibratioN value
+            int totalCalibrationValue = 0;
+            //For each LIne
+            for (int line = 0; line < inputData.Length; line++)
             {
-                //If line is empty, add calories carried by current elf to list of elves and reset value of current calories
-                if (string.IsNullOrWhiteSpace(inputData[i]))
+                //Get first digit (and multiply by 10
+                int calibrationValue = 0;
+                for (int characterPos = 0; characterPos < inputData[line].Length; characterPos++)
                 {
-                    elves.Add(elfCalories);
-                    elfCalories = 0;
-                    continue;
+                    char character = inputData[line][characterPos];
+                    if (IsDigit(character))
+                    {
+                        calibrationValue = (character - '0') * 10;
+                        break;
+                    }
                 }
-
-                //Add calories of item to current elfs calories
-                elfCalories += int.Parse(inputData[i]);
+                //Get last digit
+                for (int characterPos = inputData[line].Length-1; characterPos >= 0; characterPos--)
+                {
+                    char character = inputData[line][characterPos];
+                    if (IsDigit(character))
+                    {
+                        calibrationValue += (character - '0');
+                        break;
+                    }
+                }
+                totalCalibrationValue += calibrationValue;
             }
+            //And return the total calibration value
+            return totalCalibrationValue;
+        }
 
-            //Add calories carried by last elf to list of elves
-            elves.Add(elfCalories);
-
-            //Sort the list
-            elves.Sort();
-
-            //And return the last item (biggest)
-            return elves[^1];
+        /// <summary>
+        /// Check whether character is a digit
+        /// </summary>
+        /// <param name="character"></param>
+        /// <returns></returns>
+        public static bool IsDigit(char character)
+        {
+            return (character >= '0' && character <= '9');
         }
     }
 }

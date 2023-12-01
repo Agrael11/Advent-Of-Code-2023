@@ -5,6 +5,13 @@
     /// </summary>
     public static class Challange2
     {
+        static readonly List<(int value, string text)> numbers = [
+        (1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5"),
+        (6, "6"), (7, "7"), (8, "8"), (9, "9"),
+        (1, "one"), (2, "two"), (3, "three"),
+        (4, "four"), (5, "five"), (6, "six"),
+        (7, "seven"), (8, "eight"), (9, "nine") ];
+
         /// <summary>
         /// This is the Main function
         /// </summary>
@@ -15,44 +22,50 @@
             //Read input data
             string[] inputData = input.Replace("\r", "").TrimEnd('\n').Split('\n');
 
-            //Prepare variables - list of elves and amount of calories for current elf
-            List<int> elves = new();
-            int elfCalories = 0;
-
-            //For each line in input
-            for (int i = 0; i < inputData.Length; i++)
+            int totalCalibrationValue = 0;
+            //For each line
+            for (int line = 0; line < inputData.Length; line++)
             {
-                //If line is empty, add calories carried by current elf to list of elves and reset value of current calories
-                if (string.IsNullOrWhiteSpace(inputData[i]))
-                {
-                    elves.Add(elfCalories);
-                    elfCalories = 0;
-                    continue;
-                }
-
-                //Add calories of item to current elfs calories
-                elfCalories += int.Parse(inputData[i]);
+                //Get First Digit * 10  and Second Digit
+                int calibrationValue = GetFirstDigit(inputData[line]) * 10 + GetLastDigit(inputData[line]);
+                totalCalibrationValue += calibrationValue;
             }
-
-            //Add calories carried by last elf to list of elves
-            elves.Add(elfCalories);
-
-            //Sort the list
-            elves.Sort();
-
-            //And return the last three items (biggest)
-
-            return SumLastThree(elves);
+            //And return the last item (biggest)
+            return totalCalibrationValue;
         }
 
-        /// <summary>
-        /// Sums last three elements of list
-        /// </summary>
-        /// <param name="elves">Input list</param>
-        /// <returns></returns>
-        public static int SumLastThree(List<int> elves)
+        //Gets first digit in the string
+        public static int GetFirstDigit(string str)
         {
-            return elves[^1] + elves[^2] + elves[^3];
+            int first = int.MaxValue;
+            int outp = -1;
+            foreach (var (value, text) in numbers)
+            {
+                int index = str.IndexOf(text);
+                if (index >= 0 && index < first)
+                {
+                    first = index;
+                    outp = value;
+                }
+            }
+            return outp;
+        }
+
+        //Gets last digit in the string
+        public static int GetLastDigit(string str)
+        {
+            int first = int.MinValue;
+            int outp = -1;
+            foreach (var (value, text) in numbers)
+            {
+                int index = str.LastIndexOf(text);
+                if (index >= 0 && index > first)
+                {
+                    first = index;
+                    outp = value;
+                }
+            }
+            return outp;
         }
     }
 }

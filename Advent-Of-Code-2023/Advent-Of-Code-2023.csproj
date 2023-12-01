@@ -13,4 +13,10 @@
     <ProjectReference Include="..\Advent-Of-Code_2023-01\Advent-Of-Code_2023-01.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="inputData1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
