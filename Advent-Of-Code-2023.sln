@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Advent-Of-Code-2023", "Adve
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helpers", "Helpers\Helpers.csproj", "{92C7B923-47A0-4801-99DD-D1DFD29BBC94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Advent-Of-Code_2023-01", "Advent-Of-Code_2023-01\Advent-Of-Code_2023-01.csproj", "{3C54E163-8904-442A-B7D7-38E0E9650CE1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Advent-Of-Code-2023-01", "Advent-Of-Code-2023-01\Advent-Of-Code-2023-01.csproj", "{3C54E163-8904-442A-B7D7-38E0E9650CE1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testing-2023", "Testing-2023\Testing-2023.csproj", "{60E8E5F5-878D-4158-8AF5-BDF12F8B0030}"
 EndProject

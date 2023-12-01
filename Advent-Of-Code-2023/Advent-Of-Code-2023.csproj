@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Advent-Of-Code_2023-01\Advent-Of-Code_2023-01.csproj" />
+    <ProjectReference Include="..\Advent-Of-Code-2023-01\Advent-Of-Code-2023-01.csproj" />
   </ItemGroup>
 
   <ItemGroup>

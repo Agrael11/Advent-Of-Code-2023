@@ -1,9 +1,9 @@
 ﻿namespace AdventOfCode.Day01
 {
     /// <summary>
-    /// Main Class for Challange 2
+    /// Main Class for Challenge 2
     /// </summary>
-    public static class Challange2
+    public static class Challenge2
     {
         static readonly List<(int value, string text)> numbers = [
         (1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5"),
@@ -17,7 +17,7 @@
         /// </summary>
         /// <param name="inputData"></param>
         /// <returns></returns>
-        public static int DoChallange(string input)
+        public static int DoChallenge(string input)
         {
             //Read input data
             string[] inputData = input.Replace("\r", "").TrimEnd('\n').Split('\n');

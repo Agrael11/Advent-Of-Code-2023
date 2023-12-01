@@ -1,20 +1,20 @@
 ﻿namespace AdventOfCode.Day01
 {
     /// <summary>
-    /// Main Class for Challange 1
+    /// Main Class for Challenge 1
     /// </summary>
-    public static class Challange1
+    public static class Challenge1
     {
         /// <summary>
         /// This is the Main function
         /// </summary>
         /// <param name="inputData"></param>
         /// <returns></returns>
-        public static int DoChallange(string input)
+        public static int DoChallenge(string input)
         {
             //Read input data
             string[] inputData = input.Replace("\r", "").TrimEnd('\n').Split('\n');
-            //Remember total CalibratioN value
+            //Remember total Calibration value
             int totalCalibrationValue = 0;
             //For each LIne
             for (int line = 0; line < inputData.Length; line++)
