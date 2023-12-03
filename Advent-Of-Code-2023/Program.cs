@@ -18,6 +18,9 @@ namespace AdventOfCode
             Console.ForegroundColor = ConsoleColor.White;
             string result = "";
             bool firstStart = true;
+            if (!Directory.Exists("Settings")) Directory.CreateDirectory("Settings");
+            if (!File.Exists(Path.Combine("Settings", "firstStart"))) File.Create(Path.Combine("Settings", "firstStart"));
+            else firstStart = false;
             Console.WriteLine("Advent of Code 2023!");
             while (!result.Equals("Q", StringComparison.CurrentCultureIgnoreCase))
             {
