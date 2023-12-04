@@ -1,21 +1,23 @@
 ﻿namespace AdventOfCode.Day04
 {
+    /// <summary>
+    /// Takes care of single game card
+    /// </summary>
     public class Card
     {
-        public int CardId { get; private set; }
-        public List<int> GameNumbers { get; private set; } = [];
-        public List<int> WinningNumbers { get; private set; } = [];
-        public List<int> WinningGameNumbers => GetWinningGameNumbers();
+        public List<int> GameNumbers { get; private set; } = []; //Contains Numbers on Game
+        public List<int> WinningNumbers { get; private set; } = []; //Contains Winning numbers
+        public int WinningGameNumbersCount => GetWinningGameNumbersCount(); //Just shortcut to a function
 
         public Card(string input)
         {
+            //I split information from card for parsing
             string[] splitInput = input.Split(':');
-            string[] cardInfo = splitInput[0].Trim(' ').Split(' ');
             string[] cardNumbers = splitInput[1].Split('|');
             string[] gameNumbers = cardNumbers[0].Trim(' ').Split(' ');
             string[] winningNumbers = cardNumbers[1].Trim(' ').Split(' ');
 
-            CardId = int.Parse(cardInfo[^1]);
+            //This adds numbers from cards, and ensures no whitespace that is there.
             foreach (string gameNumber in gameNumbers)
             {
                 if (string.IsNullOrWhiteSpace(gameNumber)) continue;
@@ -30,15 +32,19 @@
             }
         }
 
-        public List<int> GetWinningGameNumbers()
+        /// <summary>
+        /// Gets winning numbers count
+        /// </summary>
+        /// <returns></returns>
+        public int GetWinningGameNumbersCount()
         {
-            List<int> winningNumbers = [];
+            int count = 0;
             foreach (int gameNumber in GameNumbers)
             {
                 if (WinningNumbers.Contains(gameNumber))
-                    winningNumbers.Add(gameNumber);
+                    count++;
             }
-            return winningNumbers;
+            return count;
         }
     }
 }

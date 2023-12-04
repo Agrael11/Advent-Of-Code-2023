@@ -14,11 +14,12 @@
         {
             //Read input data
             string[] inputData = input.Replace("\r", "").TrimEnd('\n').Split('\n');
+            
+            int totalCards = 0; //Keeps total number of cards we have
 
-            int totalCards = 0;
             List<(int cardCount, Card card)> cards = [];
 
-            foreach (string cardInput in inputData)
+            foreach (string cardInput in inputData) //Just creates list of cards
             {
                 cards.Add((1, new(cardInput)));
             }
@@ -26,16 +27,19 @@
             for (int i = 0; i < cards.Count; i++)
             {
                 (int cardCount, Card card) = cards[i];
-                int wins = card.WinningGameNumbers.Count;
-                for (int j = i+1; j < cards.Count && j <= i+wins; j++)
+                totalCards += cardCount; //We add number of this card to total count
+
+                //And for number of winning cards we add new next nth card for each of this card...
+                //just look at the code, it's easier than comment xD
+                for (int j = i+1; j < cards.Count && j <= i + card.WinningGameNumbersCount; j++)
                 {
                     var newCard = cards[j];
                     newCard.cardCount += cardCount;
                     cards[j] = newCard;
                 }
-                totalCards += cardCount;
             }
 
+            //result
             return totalCards;
         }
     }

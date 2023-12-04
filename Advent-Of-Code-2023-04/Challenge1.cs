@@ -17,12 +17,11 @@
 
             int totalPoints = 0;
 
+            //For each card (input line) we add it's points to total - points are number of winning cards -1
             foreach (string cardInput in inputData)
             {
                 Card card = new(cardInput);
-                int winningNumbersCount = card.WinningGameNumbers.Count;
-                int cardPoints = (int)Math.Pow(2, winningNumbersCount - 1);
-                totalPoints += cardPoints;
+                totalPoints += (int)Math.Pow(2, card.WinningGameNumbersCount - 1);
             }
 
             return totalPoints;
