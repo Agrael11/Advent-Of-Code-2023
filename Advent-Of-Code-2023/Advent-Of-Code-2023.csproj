@@ -2,17 +2,19 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>AdventOfCode</RootNamespace>
     <Nullable>enable</Nullable>
-    <UseWindowsForms>true</UseWindowsForms>
+    <UseWindowsForms>False</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <StartupObject>AdventOfCode.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Advent-Of-Code-2023-01\Advent-Of-Code-2023-01.csproj" />
     <ProjectReference Include="..\Advent-Of-Code-2023-02\Advent-Of-Code-2023-02.csproj" />
     <ProjectReference Include="..\Advent-Of-Code-2023-03\Advent-Of-Code-2023-03.csproj" />
+    <ProjectReference Include="..\Advent-Of-Code-2023-04\Advent-Of-Code-2023-04.csproj" />
   </ItemGroup>
 
   <ItemGroup>
