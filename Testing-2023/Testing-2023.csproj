@@ -18,17 +18,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Advent-Of-Code-2023-01\Advent-Of-Code-2023-01.csproj" />
-    <ProjectReference Include="..\Advent-Of-Code-2023-02\Advent-Of-Code-2023-02.csproj" />
-    <ProjectReference Include="..\Advent-Of-Code-2023-03\Advent-Of-Code-2023-03.csproj" />
-    <ProjectReference Include="..\Advent-Of-Code-2023-04\Advent-Of-Code-2023-04.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Examples\Day01\" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Advent-Of-Code-2023\Advent-Of-Code-2023.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Examples\Day05\example01.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Examples\Day04\example01.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
