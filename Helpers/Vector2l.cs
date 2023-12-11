@@ -2,24 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Helpers
 {
-    public class Vector2i
+    public class Vector2l
     {
-        public int X { get; set; }
-        public int Y { get; set; }
+        public long X { get; set; }
+        public long Y { get; set; }
 
-        public Vector2i(int x, int y)
+        public Vector2l(long x, long y)
         {
             X = x;
             Y = y;
         }
 
 
-        public Vector2i(Vector2i vector)
+        public Vector2l(Vector2l vector)
         {
             X = vector.X;
             Y = vector.Y;
@@ -28,22 +29,22 @@ namespace Helpers
         public override bool Equals(object? obj)
         {
             if (obj == null) return false;
-            if (obj is not Vector2i) return false;
+            if (obj is not Vector2l) return false;
 
-            return X == ((Vector2i)obj).X && Y == ((Vector2i)obj).Y;
+            return X == ((Vector2l)obj).X && Y == ((Vector2l)obj).Y;
         }
 
-        public static int SimpleDistance(Vector2i a, Vector2i b)
+        public static long SimpleDistance(Vector2l a, Vector2l b)
         {
             return Math.Abs(a.X-b.X) + Math.Abs(a.Y-b.Y);
         }
 
-        public static bool operator ==(Vector2i a, Vector2i b)
+        public static bool operator ==(Vector2l a, Vector2l b)
         {
             return a.Equals(b);
         }
 
-        public static bool operator !=(Vector2i a, Vector2i b)
+        public static bool operator !=(Vector2l a, Vector2l b)
         {
             return !a.Equals(b);
         }
