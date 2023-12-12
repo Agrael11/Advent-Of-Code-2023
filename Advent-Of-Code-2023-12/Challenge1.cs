@@ -83,13 +83,6 @@ namespace AdventOfCode.Day12
                 else
                     return 0;
             }
-            else
-            {
-                if (targetIndex >= targets.Count)
-                {
-                    return 0;
-                }
-            }
             long possibleCount = 0;
             Dictionary<Combinations, long> checkedPossibilities = [];
             foreach (Combinations possibility in segments[segmentIndex].Possibilities)
@@ -120,11 +113,8 @@ namespace AdventOfCode.Day12
                     possibleCount += countPossible;
                     checkedPossibilities.Add(possibility, countPossible);
                 }
-                else
-                {
-                    checkedPossibilities.Add(possibility, 0);
-                }
             }
+            
             return possibleCount;
         }
 
@@ -142,7 +132,8 @@ namespace AdventOfCode.Day12
 
             List<Combinations> possibleCombinations = [];
             List<string> stringCombinations = GenerateCombinations(segment.ToCharArray());
-            
+
+           // Console.WriteLine();
             foreach (string stringCombination in stringCombinations)
             {
                 List<int> combination = [];
@@ -156,9 +147,13 @@ namespace AdventOfCode.Day12
                     }
                     if (c == '#') length++;
                 }
-                if (length > 0) combination.Add(length);
-                if (combination.Count > 0)
+                if (length > 0)
+                {
+                    combination.Add(length);
+                }
+
                 possibleCombinations.Add(new(combination));
+                //Console.WriteLine(stringCombination);
             }
 
             Segment segmentPossibilities = new(possibleCombinations);

@@ -17,11 +17,14 @@ namespace AdventOfCode.Day12
         public override int GetHashCode()
         {
             int total = 0;
+            
+            if (Combination.Count == 0) return -1;
+
             foreach (int combination in Combination)
             {
                 total += combination.GetHashCode();
             }
-            return HashCode.Combine(total);
+            return total;
         }
 
         public static bool operator ==(Combinations a, Combinations b)
