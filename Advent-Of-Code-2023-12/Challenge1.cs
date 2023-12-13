@@ -8,12 +8,11 @@ namespace AdventOfCode.Day12
     /// </summary>
     public static class Challenge1
     {
-        
-     /// <summary>
-     /// This is the Main function
-     /// </summary>
-     /// <param name="inputData"></param>
-     /// <returns></returns>
+        /// <summary>
+        /// This is the Main function
+        /// </summary>
+        /// <param name="inputData"></param>
+        /// <returns></returns>
         public static long DoChallenge(string input)
         {
             //Read input data
