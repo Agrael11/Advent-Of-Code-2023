@@ -1,199 +1,166 @@
-﻿using System.Data;
-using System.Numerics;
-using System.Xml;
+﻿//Note: Thanks a lot to u/ScorixEar
+//Without his hints on reddit I would end my AoC2023 Journey here
 
 namespace AdventOfCode.Day12
 {
-
     /// <summary>
     /// Main Class for Challenge 1
     /// </summary>
     public static class Challenge1
     {
-        //I really don't know why this doesn't work...
-        //Works on example input
-        //Real input result too low :/
-
-
-
-        private readonly static Dictionary<string, Segment> knownSegments = [];
-
-        /// <summary>
-        /// This is the Main function
-        /// </summary>
-        /// <param name="inputData"></param>
-        /// <returns></returns>
+        
+     /// <summary>
+     /// This is the Main function
+     /// </summary>
+     /// <param name="inputData"></param>
+     /// <returns></returns>
         public static long DoChallenge(string input)
         {
             //Read input data
             string[] inputData = input.Replace("\r", "").TrimEnd('\n').Split('\n');
 
-            List<LineInfo> lineInfos = [];
+            List<LineInfo> lines = [];
 
+            //Parse input data
             foreach (string line in inputData)
             {
-                string[] lineInfo = line.Split();
-                List<int> results = [];
-                string[] requiredSegments = lineInfo[1].Split(',');
-                foreach (string requiredSegment in requiredSegments)
+                string[] lineData = line.Split(' ');
+                List<int> groups = [];
+                foreach (string number in lineData[1].Split(','))
                 {
-                    results.Add(int.Parse(requiredSegment));
+                    groups.Add(int.Parse(number));
                 }
-
-                string[] subsegments = lineInfo[0].Split('.', StringSplitOptions.RemoveEmptyEntries);
-                List<Segment> thisLineSegments = [];
-                foreach (string subsegment in subsegments)
-                {
-                    
-                    thisLineSegments.Add(GetCombinations(subsegment));
-                }
-                lineInfos.Add(new (results, thisLineSegments));
+                lines.Add(new(groups, lineData[0].Trim('.')));
             }
 
             long total = 0;
 
-            int ll = 0;
-            StreamWriter writer = new("temp.txt");
-            foreach (LineInfo lineInfo in lineInfos)
+            //For each line get number of combinations
+            foreach (LineInfo lineInfo in lines)
             {
-                long found = GetPossibleSegments(lineInfo.Segments, lineInfo.RequiredResult);
-                writer.WriteLine($"{inputData[ll]}   {found}");
-                total += found;
-                ll++;
+                Dictionary<(int index, int group, int usedInGroup), long> memory = []; //Just a memory
+                total += GetCombinations(lineInfo, 0, 0, 0, ref memory);
             }
-            writer.Close();
 
             return total;
         }
 
         /// <summary>
-        /// Gets number of possible segments for each possible combinations in that segment.
+        /// Helper function to use memory. It checks if we already checked for same thing once and if not, updates value using main combination function
         /// </summary>
-        /// <param name="segments"></param>
-        /// <param name="targets"></param>
-        /// <param name="segmentIndex"></param>
-        /// <param name="targetIndex"></param>
+        /// <param name="lineInfo"></param>
+        /// <param name="index"></param>
+        /// <param name="group"></param>
+        /// <param name="usedInGroup"></param>
+        /// <param name="memory"></param>
         /// <returns></returns>
-        public static long GetPossibleSegments(List<Segment> segments, List<int> targets, int segmentIndex = 0, int targetIndex = 0)
+        public static long GetCombinations(LineInfo lineInfo, int index, int group, int usedInGroup, ref Dictionary<(int index, int group, int usedInGroup), long> memory)
         {
-            if (segmentIndex >= segments.Count)
+            if (memory.ContainsKey((index, group, usedInGroup))) return memory[(index, group, usedInGroup)];
+
+            long value = GetCombinationsWithoutMemory(lineInfo, index, group, usedInGroup, ref memory);
+            memory.Add((index, group, usedInGroup), value);
+            return value;
+        }
+
+        /// <summary>
+        /// Search for number of possible combinations
+        /// </summary>
+        /// <param name="lineInfo"></param>
+        /// <param name="index"></param>
+        /// <param name="group"></param>
+        /// <param name="usedInGroup"></param>
+        /// <param name="memory"></param>
+        /// <returns></returns>
+        /// <exception cref="IndexOutOfRangeException"></exception>
+        public static long GetCombinationsWithoutMemory(LineInfo lineInfo, int index, int group, int usedInGroup, ref Dictionary<(int index, int group, int usedInGroup), long> memory)
+        {
+            //If we ran out of characters
+            //if we are done with groups system correctly, return 1 (valid combinationň
+            //Otherwise return 0 (invalid combination)
+            if (index == lineInfo.Line.Length)
             {
-                if (targetIndex == targets.Count)
+                if (group == lineInfo.Groups.Count && usedInGroup == 0)
                     return 1;
+
+                else if (group == lineInfo.Groups.Count - 1 && usedInGroup == lineInfo.Groups[group])
+                    return 1;
+
                 else
                     return 0;
             }
-            long possibleCount = 0;
-            Dictionary<Combinations, long> checkedPossibilities = [];
-            foreach (Combinations possibility in segments[segmentIndex].Possibilities)
+
+            //Another check for invalid possibility. If we're out of test groups and have something in a group ... that's not right
+            if (group >= lineInfo.Groups.Count && usedInGroup > 0)
+                return 0;
+
+            /*
+             * If character is . AND
+             * We don't have anything in group... we just move forward
+             * We are out of groups, but we already find next group, we return 0 - not possible
+             * Or if we found start of next group, but did not finished it, we also return 0
+             * Otherwise we finished a group, and therefore we check for same character, with next group.
+             */
+            if (lineInfo.Line[index] == '.')
             {
-                if (checkedPossibilities.ContainsKey(possibility))
+                if (usedInGroup == 0)
+                    return GetCombinations(lineInfo, index + 1, group, 0, ref memory);
+                if (group == lineInfo.Groups.Count && usedInGroup > 0)
+                    return 0;
+                if (usedInGroup < lineInfo.Groups[group])
+                    return 0;
+                return GetCombinations(lineInfo, index + 1, group + 1, 0, ref memory);
+            }
+            /*
+             * If we found "#" and
+             * our group is out of bounds, impossible - return 0
+             * length of our group is too big, also return 0
+             * otherwise increment length of this group
+             */
+            else if (lineInfo.Line[index] == '#')
+            {
+                if (group == lineInfo.Groups.Count)
+                    return 0;
+                if (usedInGroup >= lineInfo.Groups[group])
+                    return 0;
+                return GetCombinations(lineInfo, index + 1, group, usedInGroup + 1, ref memory);
+            }
+            /*
+             * For wildcard
+             * If we finished groups, just move to next character without doing anything. Used to make sure there is no more # later
+             * If we did not find anything in loop, we check for both possibilities - of this being a . or this being a #
+             * If we have started, but haven't finished group, we pretend this is # - increase group size and move to next character
+             * If we have finished this group, we pretend this is . - we move to next group and next character
+             * Else this is impossible and we return 0
+             */
+            else if (lineInfo.Line[index] == '?')
+            {
+                if (group == lineInfo.Groups.Count && usedInGroup == 0)
                 {
-                    possibleCount += checkedPossibilities[possibility];
-                    continue;
+                    return GetCombinations(lineInfo, index + 1, group, 0, ref memory);
                 }
-
-                bool possible = true;
-                for (int i = 0; i < possibility.Combination.Count; i++)
+                if (usedInGroup == 0)
                 {
-                    if (targetIndex + i >= targets.Count)
-                    {
-                        possible = false;
-                        break;
-                    }
-                    if (possibility.Combination[i] != targets[targetIndex + i])
-                    {
-                        possible = false;
-                        break;
-                    }
+                    long splitReality = 0;
+                    splitReality += GetCombinations(lineInfo, index + 1, group, 1, ref memory);
+                    splitReality += GetCombinations(lineInfo, index + 1, group, 0, ref memory);
+                    return splitReality;
                 }
-                if (possible)
+                else if (usedInGroup < lineInfo.Groups[group])
                 {
-                    long countPossible = GetPossibleSegments(segments, targets, segmentIndex + 1, targetIndex + possibility.Combination.Count);
-                    possibleCount += countPossible;
-                    checkedPossibilities.Add(possibility, countPossible);
+                    return GetCombinations(lineInfo, index + 1, group, usedInGroup + 1, ref memory);
                 }
-            }
-            
-            return possibleCount;
-        }
-
-        /// <summary>
-        /// Gets all combinations for segment in number form
-        /// </summary>
-        /// <param name="segment"></param>
-        /// <returns></returns>
-        private static Segment GetCombinations(string segment)
-        {
-            if (knownSegments.TryGetValue(segment, out Segment value))
-            {
-                return value;
-            }
-
-            List<Combinations> possibleCombinations = [];
-            List<string> stringCombinations = GenerateCombinations(segment.ToCharArray());
-
-           // Console.WriteLine();
-            foreach (string stringCombination in stringCombinations)
-            {
-                List<int> combination = [];
-                int length = 0;
-                foreach (char c in stringCombination)
+                else if (usedInGroup == lineInfo.Groups[group])
                 {
-                    if (c == '.' && length > 0)
-                    {
-                        combination.Add(length);
-                        length = 0;
-                    }
-                    if (c == '#') length++;
+                    return GetCombinations(lineInfo, index + 1, group + 1, 0, ref memory);
                 }
-                if (length > 0)
+                else
                 {
-                    combination.Add(length);
+                    return 0;
                 }
-
-                possibleCombinations.Add(new(combination));
-                //Console.WriteLine(stringCombination);
             }
-
-            Segment segmentPossibilities = new(possibleCombinations);
-
-            knownSegments.Add(segment, segmentPossibilities);
-            return segmentPossibilities;
-        }
-
-        /// <summary>
-        /// Generates all combinations for segment but in text form
-        /// </summary>
-        /// <param name="chars"></param>
-        /// <param name="index"></param>
-        /// <param name="combinations"></param>
-        /// <returns></returns>
-        static List<string> GenerateCombinations(char[] chars, int index = 0, List<string>? combinations = null)
-        {
-            combinations ??= [];
-
-            if (index == chars.Length)
-            {
-                combinations.Add(new string(chars));
-                return combinations;
-            }
-
-            if (chars[index] == '?')
-            {
-                chars[index] = '.';
-                GenerateCombinations(chars, index + 1, combinations);
-
-                chars[index] = '#';
-                GenerateCombinations(chars, index + 1, combinations);
-
-                chars[index] = '?'; // Backtrack
-            }
-            else
-            {
-                GenerateCombinations(chars, index + 1, combinations);
-            }
-            return combinations;
+            //This should never happen
+            throw new IndexOutOfRangeException("Indexer can be only '.', '#' or '?'");
         }
     }
 }
