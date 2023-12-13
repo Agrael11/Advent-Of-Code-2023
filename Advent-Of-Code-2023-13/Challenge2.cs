@@ -147,7 +147,7 @@
             if (line2.Length > line1.Length) return false;
             for (int i = 0; i < line2.Length; i++)
             {
-                if (line1[^(1 + i)] != line2[^(1 + i)] && error == true) return true;
+                if (line1[^(1 + i)] != line2[^(1 + i)] && error == true) return false;
                 else if (line1[^(1 + i)] != line2[^(1 + i)]) error = true;
             }
             return error;
