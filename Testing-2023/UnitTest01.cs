@@ -1,12 +1,12 @@
 namespace Testing_2023
 {
     [TestClass]
-    public class UnitTest1
+    public class UnitTest01
     {
         private readonly string example1;
         private readonly string example2;
 
-        public UnitTest1()
+        public UnitTest01()
         {
             example1 = System.IO.File.ReadAllText("Examples/Day01/example01.txt");
             example2 = System.IO.File.ReadAllText("Examples/Day01/example02.txt");
