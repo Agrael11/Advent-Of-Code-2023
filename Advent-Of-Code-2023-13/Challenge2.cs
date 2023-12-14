@@ -115,8 +115,8 @@
         /// <returns></returns>
         private static bool LineMirrored(string line, int position, ref bool smudged)
         {
-            string part1 = line.Substring(0, position);
-            string part2 = new(line.Substring(position).Reverse().ToArray());
+            string part1 = line[..position];
+            string part2 = new(line[position..].Reverse().ToArray());
             //If we already found smudge on previous lines, we do standard comparison
             if (smudged)
             {

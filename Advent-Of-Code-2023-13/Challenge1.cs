@@ -111,8 +111,8 @@
         /// <returns></returns>
         private static bool LineMirrored(string line, int position)
         {
-            string part1 = line.Substring(0, position);
-            string part2 = new(line.Substring(position).Reverse().ToArray());
+            string part1 = line[..position];
+            string part2 = new(line[position..].Reverse().ToArray());
             return part1.EndsWith(part2) || part2.EndsWith(part1);
         }
     }
