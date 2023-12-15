@@ -66,7 +66,7 @@ namespace AdventOfCode.Day14
                         else
                         {
                             //otherwise we move to next state by faking Hash
-                            map.HashCache = states[state + 1];
+                            MoveBlocks();
                         }
                     }
                     else
