@@ -33,7 +33,7 @@ namespace AdventOfCode.Day16
                 }
             }
 
-            //Check every possible start point, and if result is larger keep it
+            //For every possible start point create it's own thread
 
             List<Thread> threads = [];
             List<int> results = [];
@@ -57,17 +57,13 @@ namespace AdventOfCode.Day16
                 threads.Add(thread2);
             }
 
-            while (threads.Count > 0)
+            //Wait until all threads are finished
+            while (results.Count == threads.Count)
             {
-                for (int i = 0; i < threads.Count; i++)
-                {
-                    if (!threads[i].IsAlive)
-                    {
-                        threads.RemoveAt(i);
-                    }
-                }
+                Thread.Sleep(10);
             }
 
+            //And select largest
             int largest = 0;
 
             foreach (int result in results)
