@@ -97,7 +97,7 @@ namespace AdventOfCode
 
                     }
                 }
-                else
+                else if (!result.Equals("Q", StringComparison.CurrentCultureIgnoreCase)) 
                 {
                     DrawATree();
                     Console.ForegroundColor = ConsoleColor.Red;
