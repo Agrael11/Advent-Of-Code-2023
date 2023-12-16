@@ -11,9 +11,6 @@ namespace AdventOfCode.Day16
         static int width = 0;
         static int height = 0;
         static char[,] map = new char[0, 0];
-        static readonly List<(int x, int y)> visited = [];
-        static readonly List<(int x, int y, int xvel, int yvel)> memory = [];
-        static readonly List<(int x, int y, int xvel, int yvel)> tasks = [];
 
         /// <summary>
         /// This is the Main function
@@ -24,8 +21,6 @@ namespace AdventOfCode.Day16
         {
             //Read input data
             string[] inputData = input.Replace("\r", "").TrimEnd('\n').Split('\n');
-            memory.Clear();
-            visited.Clear();
 
             width = inputData[0].Length;
             height = inputData.Length;
@@ -38,22 +33,45 @@ namespace AdventOfCode.Day16
                 }
             }
 
-            int largest = 0;
-
             //Check every possible start point, and if result is larger keep it
+
+            List<Thread> threads = [];
+            List<int> results = [];
+
             for (int x = 0; x < width; x++)
             {
-                int result = StartDirection(x, 0, 0, 1);
-                if (result > largest) largest = result;
-                result = StartDirection(x, height - 1, 0, -1);
-                if (result > largest) largest = result;
+                Thread thread = new(() => { results.Add(StartDirection(x, 0, 0, 1)); });
+                Thread thread2 = new(() => { results.Add(StartDirection(x, height - 1, 0, -1)); });
+                thread.Start();
+                thread2.Start();
+                threads.Add(thread);
+                threads.Add(thread2);
             }
-
             for (int y = 0; y < height; y++)
             {
-                int result = StartDirection(0, y, 1, 0);
-                if (result > largest) largest = result;
-                result = StartDirection(width - 1, y, -1, 0);
+                Thread thread = new(() => { results.Add(StartDirection(0, y, 1, 0)); });
+                Thread thread2 = new(() => { results.Add(StartDirection(width - 1, y, -1, 0)); });
+                thread.Start();
+                thread2.Start();
+                threads.Add(thread);
+                threads.Add(thread2);
+            }
+
+            while (threads.Count > 0)
+            {
+                for (int i = 0; i < threads.Count; i++)
+                {
+                    if (!threads[i].IsAlive)
+                    {
+                        threads.RemoveAt(i);
+                    }
+                }
+            }
+
+            int largest = 0;
+
+            foreach (int result in results)
+            {
                 if (result > largest) largest = result;
             }
 
@@ -70,15 +88,15 @@ namespace AdventOfCode.Day16
         /// <returns></returns>
         static int StartDirection(int X, int Y, int velocityX, int velocityY)
         {
-            visited.Clear();
-            memory.Clear();
-            tasks.Clear();
-            MoveBeam(X, Y, velocityX, velocityY);
+            List<(int x, int y)> visited = [];
+            List<(int x, int y, int xvel, int yvel)> memory = [];
+            List<(int x, int y, int xvel, int yvel)> tasks = [];
+            MoveBeam(X, Y, velocityX, velocityY, ref memory, ref tasks, ref visited);
             while (tasks.Count != 0)
             {
                 (int x, int y, int velX, int velY) = tasks[^1];
                 tasks.RemoveAt(tasks.Count - 1);
-                MoveBeam(x, y, velX, velY);
+                MoveBeam(x, y, velX, velY, ref memory, ref tasks, ref visited);
             }
             return visited.Count;
         }
@@ -91,7 +109,7 @@ namespace AdventOfCode.Day16
         /// <param name="Y"></param>
         /// <param name="velocityX"></param>
         /// <param name="velocityY"></param>
-        static void MoveBeam(int X, int Y, int velocityX, int velocityY)
+        static void MoveBeam(int X, int Y, int velocityX, int velocityY, ref List<(int x, int y, int xvel, int yvel)> memory, ref List<(int x, int y, int xvel, int yvel)> tasks, ref List<(int x, int y)> visited)
         {
             //If we already went this direction from this place we would be just repeating same thing
             if (memory.Contains((X, Y, velocityX, velocityY))) return;
