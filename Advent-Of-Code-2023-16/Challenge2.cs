@@ -40,8 +40,20 @@ namespace AdventOfCode.Day16
 
             for (int x = 0; x < width; x++)
             {
-                Thread thread = new(() => { results.Add(StartDirection(x, 0, 0, 1)); });
-                Thread thread2 = new(() => { results.Add(StartDirection(x, height - 1, 0, -1)); });
+                Thread thread = new(() =>
+                {
+                    lock (results)
+                    {
+                        results.Add(StartDirection(x, 0, 0, 1));
+                    }
+                });
+                Thread thread2 = new(() =>
+                {
+                    lock (results)
+                    {
+                        results.Add(StartDirection(x, height - 1, 0, -1));
+                    }
+                });
                 thread.Start();
                 thread2.Start();
                 threads.Add(thread);
@@ -49,8 +61,20 @@ namespace AdventOfCode.Day16
             }
             for (int y = 0; y < height; y++)
             {
-                Thread thread = new(() => { results.Add(StartDirection(0, y, 1, 0)); });
-                Thread thread2 = new(() => { results.Add(StartDirection(width - 1, y, -1, 0)); });
+                Thread thread = new(() =>
+                {
+                    lock (results)
+                    { 
+                        results.Add(StartDirection(0, y, 1, 0));
+                    }
+                });
+                Thread thread2 = new(() =>
+                {
+                    lock (results)
+                    {
+                        results.Add(StartDirection(width - 1, y, -1, 0));
+                    }
+                });
                 thread.Start();
                 thread2.Start();
                 threads.Add(thread);
