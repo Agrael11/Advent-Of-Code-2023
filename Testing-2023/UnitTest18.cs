@@ -1,27 +1,27 @@
 namespace Testing_2023
 {
     [TestClass]
-    public class UnitTest15
+    public class UnitTest18
     {
         private readonly string example1;
 
-        public UnitTest15()
+        public UnitTest18()
         {
-            example1 = System.IO.File.ReadAllText("Examples/Day15/example01.txt");
+            example1 = System.IO.File.ReadAllText("Examples/Day18/example01.txt");
         }
 
         [TestMethod]
         public void TestPart1()
         {
-            var result = AdventOfCode.Day15.Challenge1.DoChallenge(example1);
-            Assert.IsTrue(result == 1320, $"Incorrect result! Expected:1320, Got:{result}");
+            var result = AdventOfCode.Day18.Challenge1.DoChallenge(example1);
+            Assert.IsTrue(result == 62, $"Incorrect result! Expected:62, Got:{result}");
         }
 
         [TestMethod]
         public void TestPart2()
         {
-            var result = AdventOfCode.Day15.Challenge2.DoChallenge(example1);
-            Assert.IsTrue(result == 145, $"Incorrect result! Expected:145 Got:{result}");
+            var result = AdventOfCode.Day18.Challenge2.DoChallenge(example1);
+            Assert.IsTrue(result == 952408144115, $"Incorrect result! Expected:952408144115 Got:{result}");
         }
     }
 }
