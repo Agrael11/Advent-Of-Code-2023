@@ -8,12 +8,12 @@ namespace AdventOfCode.Day18
     /// </summary>
     public static class Challenge2
     {
-        static Dictionary<long, Dictionary<long, long>> Vertices = [];
+        static readonly Dictionary<long, Dictionary<long, long>> Vertices = [];
 
-        static long right = 1;
-        static long bottom = 1;
-        static long top = 0;
-        static long left = 0;
+        static readonly long right = 1;
+        static readonly long bottom = 1;
+        static readonly long top = 0;
+        static readonly long left = 0;
 
         /// <summary>
         /// This is the Main function
@@ -25,7 +25,7 @@ namespace AdventOfCode.Day18
             //Read input data
             string[] inputData = input.Replace("\r", "").TrimEnd('\n').Split('\n');
 
-            (long x, long y) currentPoint = (0, 0);
+            (long x, long y) = (0, 0);
             List<(long x, long y)> polygonVertices = [];
 
             //Parse input into list of connected vertices
@@ -40,20 +40,20 @@ namespace AdventOfCode.Day18
                 switch (data[2][^2])
                 {
                     case '3':
-                        polygonVertices.Add((currentPoint.x, currentPoint.y));
-                        currentPoint.y -= length;
-                        polygonVertices.Add((currentPoint.x, currentPoint.y));
+                        polygonVertices.Add((x, y));
+                        y -= length;
+                        polygonVertices.Add((x, y));
                         break;
                     case '1':
-                        polygonVertices.Add((currentPoint.x, currentPoint.y));
-                        currentPoint.y += length;
-                        polygonVertices.Add((currentPoint.x, currentPoint.y));
+                        polygonVertices.Add((x, y));
+                        y += length;
+                        polygonVertices.Add((x, y));
                         break;
                     case '0':
-                        currentPoint.x += length;
+                        x += length;
                         break;
                     case '2':
-                        currentPoint.x -= length;
+                        x -= length;
                         break;
                 }
             }

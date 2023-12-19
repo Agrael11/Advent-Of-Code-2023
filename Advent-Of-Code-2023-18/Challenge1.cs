@@ -19,7 +19,7 @@ namespace AdventOfCode.Day18
             //Read input data
             string[] inputData = input.Replace("\r", "").TrimEnd('\n').Split('\n');
 
-            (long x, long y) currentPoint = (0, 0);
+            (long x, long y) = (0, 0);
             List<(long x, long y)> polygonVertices = [];
 
             //Parse input to list of vertices
@@ -31,20 +31,20 @@ namespace AdventOfCode.Day18
                 switch (instruction)
                 {
                     case 'U':
-                        polygonVertices.Add((currentPoint.x, currentPoint.y));
-                        currentPoint.y -= length;
-                        polygonVertices.Add((currentPoint.x, currentPoint.y));
+                        polygonVertices.Add((x, y));
+                        y -= length;
+                        polygonVertices.Add((x, y));
                         break;
                     case 'D':
-                        polygonVertices.Add((currentPoint.x, currentPoint.y));
-                        currentPoint.y += length;
-                        polygonVertices.Add((currentPoint.x, currentPoint.y));
+                        polygonVertices.Add((x, y));
+                        y += length;
+                        polygonVertices.Add((x, y));
                         break;
                     case 'R':
-                        currentPoint.x += length;
+                        x += length;
                         break;
                     case 'L':
-                        currentPoint.x -= length;
+                        x -= length;
                         break;
                 }
             }
