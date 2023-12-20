@@ -30,6 +30,7 @@
     <ProjectReference Include="..\Advent-Of-Code-2023-17\Advent-Of-Code-2023-17.csproj" />
     <ProjectReference Include="..\Advent-Of-Code-2023-18\Advent-Of-Code-2023-18.csproj" />
     <ProjectReference Include="..\Advent-Of-Code-2023-19\Advent-Of-Code-2023-19.csproj" />
+    <ProjectReference Include="..\Advent-Of-Code-2023-20\Advent-Of-Code-2023-20.csproj" />
   </ItemGroup>
 
   <ItemGroup>
