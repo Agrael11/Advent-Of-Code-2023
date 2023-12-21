@@ -3,6 +3,8 @@
  * Thanks u/nikanjX, u/bdaene and u/StatisticianJolly335 for help
  */
 
+using Helpers;
+
 namespace AdventOfCode.Day21
 {
     /// <summary>
@@ -51,32 +53,34 @@ namespace AdventOfCode.Day21
 
             int halfWidth = width / 2;
 
-            //TODO: Maybe implement a way to create this formula? Shouldn't be too hard.
-            /* Use this to get quadratic formula :D
-             *
-            for (int i = 1; i <= width*3+halfWidth; i++)
+            int position = 0;
+            long[] positions = [1,2,3];
+            long[] results = new long[3];
+
+            for (int i = 1; i <= width*2+halfWidth; i++)
             {
                 Move();
                 if (i % width == halfWidth)
                 {
-                    Console.WriteLine($"{i}: {stepPoints.Count}");
+                    results[position] = stepPoints.Count;
+                    position++;
                 }
-            }*/
+            }
 
-            return GetReuslt((Target - halfWidth) / width + 1);
+            //Calculates a, b and c for quadratic formula
+            long[] abc = MathHelpers.SolveSystemOfEquations(positions, results);
+
+            return QuadraticResultForN((Target - halfWidth) / width + 1, abc[0], abc[1], abc[2]);
         }
         
         /// <summary>
-        /// Calculates to get quadratic formula
+        /// Calculates to get quadratic formula (a*n^2 + b*n + c)
         /// </summary>
-        /// <param name="i"></param>
+        /// <param name="n"></param>
         /// <returns></returns>
-        public static long GetReuslt(double i)
+        public static long QuadraticResultForN(long n, long a, long b, long c)
         {
-            long n = (long)(15181 * i * i);
-            n -= (long)(15061 * i);
-            n += 3729;
-            return n;
+            return a * n * n + b * n + c;
         }
 
         /// <summary>
