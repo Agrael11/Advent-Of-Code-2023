@@ -37,10 +37,11 @@ namespace AdventOfCode.Day22
                 bricks.Add(new(new(x1, y1, z1), new(x2, y2, z2)));
             }
 
+            bricks = [.. bricks.OrderBy((brick) => { return brick.Position.Z; })];
+            //Push bricks down as much as I acn
             while (MoveBricksDown()) ;
 
-            MoveBricksDown();
-
+            //Reverses x supported by y to y supporting x
             foreach (Brick brick in bricks)
             {
                 foreach(Brick supportingBrick in brick.SupportedBy)
@@ -49,6 +50,7 @@ namespace AdventOfCode.Day22
                 }
             }
 
+            //If brick would cause any other brick to fall, it's not safe
             int disintegrated = 0;
             foreach (Brick brick in bricks)
             {
@@ -63,6 +65,10 @@ namespace AdventOfCode.Day22
             return disintegrated;
         }
 
+        /// <summary>
+        /// Tries to push all bricks down
+        /// </summary>
+        /// <returns></returns>
         private static bool MoveBricksDown()
         {
             bool moved = false;
@@ -73,6 +79,11 @@ namespace AdventOfCode.Day22
             return moved;
         }
 
+        /// <summary>
+        /// Tries to push one brick down.
+        /// </summary>
+        /// <param name="brickIndex"></param>
+        /// <returns></returns>
         private static bool MoveBrickDown(int brickIndex)
         {
             Brick brick = bricks[brickIndex];
@@ -93,6 +104,7 @@ namespace AdventOfCode.Day22
                 if (i == brickIndex) continue;
                 if (brick.Intersects(bricks[i]))
                 {
+                    //This part also makes brick remember on what bricks it's standing
                     brick.SupportedBy.Add(bricks[i]);
                     moved = false;
                 }

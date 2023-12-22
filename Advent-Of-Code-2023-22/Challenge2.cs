@@ -9,7 +9,6 @@ namespace AdventOfCode.Day22
     /// </summary>
     public static class Challenge2
     {
-        private static Dictionary<List<Brick>, int> memory = [];
         private static List<Brick> bricks = [];
 
         /// <summary>
@@ -21,8 +20,6 @@ namespace AdventOfCode.Day22
         {
             //Read input data
             string[] inputData = input.Replace("\r", "").TrimEnd('\n').Split('\n');
-
-            memory = new Dictionary<List<Brick>, int>(new ListComparer<Brick>());
 
             bricks = [];
 
@@ -41,6 +38,7 @@ namespace AdventOfCode.Day22
                 bricks.Add(new(new(x1, y1, z1), new(x2, y2, z2)));
             }
 
+
             bricks = [.. bricks.OrderBy((brick) => { return brick.Position.Z; })];
             while (MoveBricksDown()) ;
 
@@ -51,62 +49,54 @@ namespace AdventOfCode.Day22
                     supportingBrick.Supports.Add(brick);
                 }
             }
-
-            foreach (Brick brick in bricks)
-            {
-                foreach (Brick brick2 in bricks)
-                {
-                    if (brick.Equals(brick2)) continue;
-                    if (brick.Intersects(brick2)) throw new Exception("Oh");
-                }
-            }
-
+            
             int disintegrated = 0;
 
-            string bricksResult = "";
-            string brickst = "";
-
+            //checks how many bricks would break if we removed any of them.
             foreach (Brick brick in bricks)
             {
-                
                 disintegrated += Disintegrates([brick]);
             }
 
             return disintegrated;
         }
 
-        private  static string BrickToString(Brick brick)
+        private static string BrickToString(Brick brick)
         {
             return "v1_" + brick.Position.X + "_" + brick.Position.Y + "_" + brick.Position.Z + "_v2_"
                     + brick.Position2.X + "_" + brick.Position2.Y + "_" + brick.Position2.Z;
         }
 
-        private static int Disintegrates(List<Brick> bricks)
+        /// <summary>
+        /// Count how  many bricks can would break if "removedBricks" was removed.
+        /// It also passes those bricks and new brinks that would break to next attempt
+        /// </summary>
+        /// <param name="removedBricks"></param>
+        /// <returns></returns>
+        private static int Disintegrates(List<Brick> removedBricks)
         {
-            if (memory.TryGetValue(bricks, out int value))
-            {
-                return value;
-            }
-
             int disintegrate = 0;
             List<Brick> toDisintegrate = [];
-            foreach (Brick suporter in bricks)
+            foreach (Brick supporter in removedBricks)
             {
-                foreach (Brick supported in suporter.Supports)
+                foreach (Brick supported in supporter.Supports)
                 {
-                    if (!toDisintegrate.Contains(supported))
+                    if (!removedBricks.Contains(supported) && !toDisintegrate.Contains(supported))
                     {
-                        List<Brick> supporting = [];
-                        supporting.AddRange(supported.SupportedBy);
-                        foreach (Brick supporter2 in bricks)
-                        {
-                            supporting.Remove(supporter2);
-                        }
-                        if (supporting.Count == 0)
-                        {
-                            toDisintegrate.Add(supported);
-                        }
+                        toDisintegrate.Add(supported);
                     }
+                }
+            }
+            for (int i = toDisintegrate.Count-1; i >= 0; i--)
+            {
+                List<Brick> supportedBy = [.. toDisintegrate[i].SupportedBy];
+                foreach (Brick supporter in removedBricks)
+                {
+                    supportedBy.Remove(supporter);
+                }
+                if (supportedBy.Count > 0)
+                {
+                    toDisintegrate.RemoveAt(i);
                 }
             }
 
@@ -114,13 +104,17 @@ namespace AdventOfCode.Day22
 
             if (toDisintegrate.Count > 0)
             {
+                toDisintegrate.AddRange(removedBricks);
                 disintegrate += Disintegrates(toDisintegrate);
             }
 
-            memory.Add(bricks, disintegrate);
             return disintegrate;
         }
 
+        /// <summary>
+        /// Tries to push all bricks down
+        /// </summary>
+        /// <returns></returns>
         private static bool MoveBricksDown()
         {
             bool moved = false;
@@ -131,6 +125,11 @@ namespace AdventOfCode.Day22
             return moved;
         }
 
+        /// <summary>
+        /// Tries to push one brick down.
+        /// </summary>
+        /// <param name="brickIndex"></param>
+        /// <returns></returns>
         private static bool MoveBrickDown(int brickIndex)
         {
             Brick brick = bricks[brickIndex];
@@ -151,6 +150,7 @@ namespace AdventOfCode.Day22
                 if (i == brickIndex) continue;
                 if (brick.Intersects(bricks[i]))
                 {
+                    //This part also makes brick remember on what bricks it's standing
                     brick.SupportedBy.Add(bricks[i]);
                     moved = false;
                 }
