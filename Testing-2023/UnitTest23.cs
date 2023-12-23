@@ -13,14 +13,14 @@ namespace Testing_2023
         [TestMethod]
         public void TestPart1()
         {
-            var result1 = AdventOfCode.Day20.Challenge1.DoChallenge(example1);
+            var result1 = AdventOfCode.Day23.Challenge1.DoChallenge(example1);
             Assert.IsTrue(result1 == 94, $"Incorrect result! Expected:94, Got:{result1}");
         }
 
         [TestMethod]
         public void TestPart2()
         {
-            var result1 = AdventOfCode.Day20.Challenge1.DoChallenge(example1);
+            var result1 = AdventOfCode.Day23.Challenge2.DoChallenge(example1);
             Assert.IsTrue(result1 == 154, $"Incorrect result! Expected:154, Got:{result1}");
         }
     }
